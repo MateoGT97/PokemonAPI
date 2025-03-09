@@ -19,7 +19,7 @@ public class PokemonSpeciesParser : IPokemonSpeciesParser
     /// Parses basic information of a Pokemon from a stream
     /// </summary>
     /// <param name="speciesStream">The stream from which to parse the basic information.</param>
-    /// <returns>object with parsed Information</returns>
+    /// <returns>True if successfully parsed, False otherwise</returns>
     public bool ParseBasicInformationFromStream(Stream? speciesStream)
     {
         if (speciesStream == null)
@@ -43,9 +43,37 @@ public class PokemonSpeciesParser : IPokemonSpeciesParser
     }
 
     /// <summary>
+    /// Parses the translation of the descriptioon for the Pokemon, 
+    // if not possible to translate, the description remains as the standard one
+    /// </summary>
+    /// <param name="translationStream">The stream from which to parse the description translation.</param>
+    /// <returns>True if successfully parsed, False otherwise</returns>
+    public bool ParseTranslationFromStream(Stream? translationStream)
+    {
+        if (translationStream == null)
+        {
+            return false;
+        }
+        try
+        {
+            JsonNode? rootSpeciesNode = JsonNode.Parse(translationStream);
+            if (BuildingSource == Enums.BuildingSource.ExternalAPI)
+            {
+                return TranslationFromExternalJsonNode(rootSpeciesNode);
+            }
+            return false;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
     /// Parses a PokemonSpeciesModel's basic info from a JsonNode
     /// </summary>
     /// <param name="rootJsonNode">Pokemon root JsonNode</param>
+    /// <returns>True if successfully parsed, False otherwise</returns>
     private bool BasicInformationFromExternalJsonNode(JsonNode? rootJsonNode)
     {
         if (rootJsonNode == null)
@@ -66,5 +94,22 @@ public class PokemonSpeciesParser : IPokemonSpeciesParser
         Model.Description = description;
         return true;
     }
+    
+    /// <summary>
+    /// Parses a PokemonSpeciesModel's description's translation from a JsonNode
+    /// </summary>
+    /// <param name="rootTranslationNode">Translation root JsonNode</param>
+    /// <returns>True if successfully parsed, False otherwise</returns>
+    private bool TranslationFromExternalJsonNode(JsonNode? rootTranslationNode)
+    {
+        if (rootTranslationNode == null)
+        {
+            return false;
+        }
+        string? translation = rootTranslationNode["contents"]?["translated"]?
+            .ToString().SanitizeStringFromSpecialCharacters() ?? Model.Description;
 
+        Model.Description = translation;
+        return true;
+    }
 }
