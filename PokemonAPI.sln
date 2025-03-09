@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokemonAPITests", "PokemonAPITests\PokemonAPITests.csproj", "{B268FFE9-F672-4E62-BB6D-4D98E936D571}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokemonAPI", "PokemonAPI\PokemonAPI.csproj", "{1D624C65-EEA8-43F4-8611-C516D394C25E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B268FFE9-F672-4E62-BB6D-4D98E936D571}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B268FFE9-F672-4E62-BB6D-4D98E936D571}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B268FFE9-F672-4E62-BB6D-4D98E936D571}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B268FFE9-F672-4E62-BB6D-4D98E936D571}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D624C65-EEA8-43F4-8611-C516D394C25E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D624C65-EEA8-43F4-8611-C516D394C25E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D624C65-EEA8-43F4-8611-C516D394C25E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D624C65-EEA8-43F4-8611-C516D394C25E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
