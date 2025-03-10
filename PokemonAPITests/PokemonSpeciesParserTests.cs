@@ -7,7 +7,7 @@ namespace PokemonAPITests;
 
 public class PokemonSpeciesParserTests
 {
-    string _theoryFilesInfo = "./TheoryFiles";
+    private string _theoryFilesInfo = "./TheoryFiles";
     [Theory]
     [InlineData("mewtwo","ParseBasicRealInfoMewTwo.json")]
     public void ParseBasicRealInformationFromExternalStream(string pokemonName, string realInformationJsonPath)
@@ -39,5 +39,32 @@ public class PokemonSpeciesParserTests
         Assert.Null(fakeInfoSpeciesParser.Model?.Description);
         Assert.Null(fakeInfoSpeciesParser.Model?.Habitat);
         Assert.Null(fakeInfoSpeciesParser.Model?.IsLegendary);
+    }
+
+    [Theory]
+    [InlineData("TranslatedMewTwo.json")]
+    public void ParseTranslatedRealInformationFromExternalStream(string translatedRealInformationJsonPath)
+    {
+        // Arrange
+        var realTranslationStream = File.OpenRead($"{_theoryFilesInfo}/{translatedRealInformationJsonPath}");
+        var realInfoSpeciesParser = new PokemonSpeciesParser(){ BuildingSource = BuildingSource.ExternalAPI};
+        realInfoSpeciesParser.Model.Description = "A Description";
+
+        var fakeInfoStream = new MemoryStream(Encoding.UTF8.GetBytes("Oops!"));
+        var fakeInfoSpeciesParser = new PokemonSpeciesParser(){ BuildingSource = BuildingSource.ExternalAPI};
+        fakeInfoSpeciesParser.Model.Description = "A Description";
+
+        // Act
+        var resultRealStream = realInfoSpeciesParser.ParseTranslationFromStream(realTranslationStream);
+        var resultFakeStream = fakeInfoSpeciesParser.ParseTranslationFromStream(fakeInfoStream);
+
+        // Assert
+        Assert.False(resultFakeStream);
+        Assert.True(resultRealStream);
+
+        Assert.IsAssignableFrom<PokemonSpeciesModel>(fakeInfoSpeciesParser.Model);
+        Assert.IsAssignableFrom<PokemonSpeciesModel>(realInfoSpeciesParser.Model);
+
+        Assert.NotEqual(realInfoSpeciesParser.Model.Description, fakeInfoSpeciesParser.Model.Description);
     }
 }
