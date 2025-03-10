@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using PokemonAPI.BusinessLogic.Implementations;
 using PokemonAPI.BusinessLogic.Interfaces;
-using PokemonAPI.Controllers;
+using PokemonAPI.Controllers.Implementations;
 using PokemonAPI.Models;
 
 namespace PokemonAPITests;

@@ -1,5 +1,6 @@
 using PokemonAPI.BusinessLogic.Implementations;
 using PokemonAPI.BusinessLogic.Interfaces;
+using PokemonAPI.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
 builder.Services.AddTransient<IPokemonSpeciesParser, PokemonSpeciesParser>();
+builder.Services.AddSingleton<ILoggerUtility, LoggerUtility>();
 
 var app = builder.Build();
 
