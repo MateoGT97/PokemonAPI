@@ -25,4 +25,10 @@
     <ProjectReference Include="..\PokemonAPI\PokemonAPI.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="TheoryFiles/*">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup> 
+
 </Project>
