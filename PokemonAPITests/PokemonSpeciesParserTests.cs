@@ -1,7 +1,6 @@
 using System.Text;
-using PokemonAPI.BusinessLogic.Enums;
-using PokemonAPI.BusinessLogic.Implementations;
-using PokemonAPI.Models;
+using PokemonAPIBusinessLayer.Models;
+using PokemonAPIBusinessLayer.SpeciesParser;
 
 namespace PokemonAPITests;
 
@@ -14,10 +13,10 @@ public class PokemonSpeciesParserTests
     {
         // Arrange
         var realInfoStream = File.OpenRead($"{_theoryFilesInfo}/{realInformationJsonPath}");
-        var realInfoSpeciesParser = new PokemonSpeciesParser(){ SpeciesName = pokemonName,BuildingSource = BuildingSource.ExternalAPI};
+        var realInfoSpeciesParser = new PokemonSpeciesParser(){ SpeciesName = pokemonName};
 
         var fakeInfoStream = new MemoryStream(Encoding.UTF8.GetBytes("Oops!"));
-        var fakeInfoSpeciesParser = new PokemonSpeciesParser(){ SpeciesName = pokemonName,BuildingSource = BuildingSource.ExternalAPI};
+        var fakeInfoSpeciesParser = new PokemonSpeciesParser(){ SpeciesName = pokemonName};
 
         // Act
         var resultRealStream = realInfoSpeciesParser.ParseBasicInformationFromStream(realInfoStream);
@@ -47,11 +46,11 @@ public class PokemonSpeciesParserTests
     {
         // Arrange
         var realTranslationStream = File.OpenRead($"{_theoryFilesInfo}/{translatedRealInformationJsonPath}");
-        var realInfoSpeciesParser = new PokemonSpeciesParser(){ BuildingSource = BuildingSource.ExternalAPI};
+        var realInfoSpeciesParser = new PokemonSpeciesParser();
         realInfoSpeciesParser.Model.Description = "A Description";
 
         var fakeInfoStream = new MemoryStream(Encoding.UTF8.GetBytes("Oops!"));
-        var fakeInfoSpeciesParser = new PokemonSpeciesParser(){ BuildingSource = BuildingSource.ExternalAPI};
+        var fakeInfoSpeciesParser = new PokemonSpeciesParser();
         fakeInfoSpeciesParser.Model.Description = "A Description";
 
         // Act

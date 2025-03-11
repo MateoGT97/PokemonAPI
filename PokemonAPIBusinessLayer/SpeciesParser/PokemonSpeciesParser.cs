@@ -1,17 +1,14 @@
-using PokemonAPI.BusinessLogic.Enums;
-using PokemonAPI.BusinessLogic.Interfaces;
-using PokemonAPI.Helpers;
-using PokemonAPI.Models;
+using PokemonAPIBusinessLayer.Helpers;
+using PokemonAPIBusinessLayer.Models;
 using System.Text.Json.Nodes;
 
-namespace PokemonAPI.BusinessLogic.Implementations;
+namespace PokemonAPIBusinessLayer.SpeciesParser;
 
 /// <summary>
 /// Custom parser for PokemonSpeciesModel class
 /// </summary>
 public class PokemonSpeciesParser : IPokemonSpeciesParser
 {
-    public BuildingSource? BuildingSource { get; set; }
     public PokemonSpeciesModel Model { get; set; } = new PokemonSpeciesModel();
     public string? SpeciesName { get; set; }
 
@@ -30,11 +27,7 @@ public class PokemonSpeciesParser : IPokemonSpeciesParser
         try
         {
             JsonNode? rootSpeciesNode = JsonNode.Parse(speciesStream);
-            if (BuildingSource == Enums.BuildingSource.ExternalAPI)
-            {
-                return BasicInformationFromExternalJsonNode(rootSpeciesNode);
-            }
-            return false;
+            return BasicInformationFromExternalJsonNode(rootSpeciesNode);
         }
         catch (Exception)
         {
@@ -57,11 +50,7 @@ public class PokemonSpeciesParser : IPokemonSpeciesParser
         try
         {
             JsonNode? rootSpeciesNode = JsonNode.Parse(translationStream);
-            if (BuildingSource == Enums.BuildingSource.ExternalAPI)
-            {
-                return TranslationFromExternalJsonNode(rootSpeciesNode);
-            }
-            return false;
+            return TranslationFromExternalJsonNode(rootSpeciesNode);
         }
         catch (Exception)
         {

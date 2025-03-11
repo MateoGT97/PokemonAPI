@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokemonAPITests", "PokemonA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokemonAPI", "PokemonAPI\PokemonAPI.csproj", "{1D624C65-EEA8-43F4-8611-C516D394C25E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokemonAPIEF", "PokemonAPIEF\PokemonAPIEF.csproj", "{E36DDC75-5306-4C94-84F9-7682DB0EEF9D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokemonAPIBusinessLayer", "PokemonAPIBusinessLayer\PokemonAPIBusinessLayer.csproj", "{0A89B0C9-91B7-4108-B166-EE77534CBF8E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +28,13 @@ Global
 		{1D624C65-EEA8-43F4-8611-C516D394C25E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D624C65-EEA8-43F4-8611-C516D394C25E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D624C65-EEA8-43F4-8611-C516D394C25E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E36DDC75-5306-4C94-84F9-7682DB0EEF9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E36DDC75-5306-4C94-84F9-7682DB0EEF9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E36DDC75-5306-4C94-84F9-7682DB0EEF9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E36DDC75-5306-4C94-84F9-7682DB0EEF9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A89B0C9-91B7-4108-B166-EE77534CBF8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A89B0C9-91B7-4108-B166-EE77534CBF8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A89B0C9-91B7-4108-B166-EE77534CBF8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A89B0C9-91B7-4108-B166-EE77534CBF8E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

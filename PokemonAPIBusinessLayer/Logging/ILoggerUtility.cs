@@ -1,4 +1,4 @@
-namespace PokemonAPI.Logging;
+namespace PokemonAPIBusinessLayer.Logging;
 
 public interface ILoggerUtility
 {

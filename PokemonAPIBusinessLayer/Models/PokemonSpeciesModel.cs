@@ -1,4 +1,4 @@
-namespace PokemonAPI.Models;
+namespace PokemonAPIBusinessLayer.Models;
 
 /// <summary>
 /// Pokemon Species Model
