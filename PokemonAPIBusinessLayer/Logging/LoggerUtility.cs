@@ -3,7 +3,7 @@ using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
 
-namespace PokemonAPI.Logging;
+namespace PokemonAPIBusinessLayer.Logging;
 
 public class LoggerUtility : ILoggerUtility
 {

@@ -1,7 +1,7 @@
 using Serilog.Core;
 using Serilog.Events;
 
-namespace PokemonAPI.Logging;
+namespace PokemonAPIBusinessLayer.Logging;
 
 /// <summary>
 /// Custom enricher for Serilog that resgisters the executing Task Id

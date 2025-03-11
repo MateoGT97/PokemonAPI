@@ -23,12 +23,30 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PokemonAPI\PokemonAPI.csproj" />
+    <ProjectReference Include="..\PokemonAPIBusinessLayer\PokemonAPIBusinessLayer.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="TheoryFiles/*">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup> 
+
+  <ItemGroup>
+    <Content Include="appsettings.development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup> 
+
+  <ItemGroup>
+    <Content Include="../PokemonAPIEF.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 
 </Project>

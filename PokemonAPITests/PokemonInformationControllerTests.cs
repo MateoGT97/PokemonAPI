@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using PokemonAPI.BusinessLogic.Implementations;
-using PokemonAPI.BusinessLogic.Interfaces;
+using PokemonAPIBusinessLayer.Models;
+using PokemonAPIBusinessLayer.PokemonRepository;
+using PokemonAPIBusinessLayer.SpeciesParser;
 using PokemonAPI.Controllers.Implementations;
-using PokemonAPI.Models;
+using PokemonAPIBusinessLayer.GetPokemonInformationLogic;
 
 namespace PokemonAPITests;
 
@@ -17,7 +18,9 @@ public class PokemonInformationControllerTests
         // Arrange
         var httpClientFactoryMock = new Mock<IHttpClientFactory>();
         httpClientFactoryMock.Setup(mock => mock.CreateClient("")).Returns(new HttpClient());
-        var pokemonInformationController = new PokemonInformationController(null, httpClientFactoryMock.Object, _parser);
+        var cachedPokemonInformationRepository = new PokemonCacheRepository(new PokemonAPIEF.PokemonAPIEFContext());
+        var getPokemonInformationLogic = new GetPokemonInformationLogic(null, cachedPokemonInformationRepository, _parser);
+        var pokemonInformationController = new PokemonInformationController(null, httpClientFactoryMock.Object, getPokemonInformationLogic);
 
         // Act
         var result = await pokemonInformationController.GetPokemonBasicInformation(pokemonName);
@@ -41,7 +44,9 @@ public class PokemonInformationControllerTests
         // Arrange
         var httpClientFactoryMock = new Mock<IHttpClientFactory>();
         httpClientFactoryMock.Setup(mock => mock.CreateClient("")).Returns(new HttpClient());
-        var pokemonInformationController = new PokemonInformationController(null, httpClientFactoryMock.Object, _parser);
+        var cachedPokemonInformationRepository = new PokemonCacheRepository(new PokemonAPIEF.PokemonAPIEFContext());
+        var getPokemonInformationLogic = new GetPokemonInformationLogic(null, cachedPokemonInformationRepository, _parser);
+        var pokemonInformationController = new PokemonInformationController(null, httpClientFactoryMock.Object, getPokemonInformationLogic);
 
         // Act
         var result = await pokemonInformationController.GetPokemonBasicInformation(pokemonName);
@@ -58,7 +63,9 @@ public class PokemonInformationControllerTests
         // Arrange
         var httpClientFactoryMock = new Mock<IHttpClientFactory>();
         httpClientFactoryMock.Setup(mock => mock.CreateClient("")).Returns(new HttpClient());
-        var pokemonInformationController = new PokemonInformationController(null, httpClientFactoryMock.Object, _parser);
+        var cachedPokemonInformationRepository = new PokemonCacheRepository(new PokemonAPIEF.PokemonAPIEFContext());
+        var getPokemonInformationLogic = new GetPokemonInformationLogic(null, cachedPokemonInformationRepository, _parser);
+        var pokemonInformationController = new PokemonInformationController(null, httpClientFactoryMock.Object, getPokemonInformationLogic);
 
         // Act
         var result = await pokemonInformationController.GetPokemonBasicInformationWithTranslation(pokemonName);
@@ -82,7 +89,9 @@ public class PokemonInformationControllerTests
         // Arrange
         var httpClientFactoryMock = new Mock<IHttpClientFactory>();
         httpClientFactoryMock.Setup(mock => mock.CreateClient("")).Returns(new HttpClient());
-        var pokemonInformationController = new PokemonInformationController(null, httpClientFactoryMock.Object, _parser);
+        var cachedPokemonInformationRepository = new PokemonCacheRepository(new PokemonAPIEF.PokemonAPIEFContext());
+        var getPokemonInformationLogic = new GetPokemonInformationLogic(null, cachedPokemonInformationRepository, _parser);
+        var pokemonInformationController = new PokemonInformationController(null, httpClientFactoryMock.Object, getPokemonInformationLogic);
 
         // Act
         var result = await pokemonInformationController.GetPokemonBasicInformationWithTranslation(pokemonName);

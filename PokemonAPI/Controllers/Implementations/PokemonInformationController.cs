@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using PokemonAPI.BusinessLogic.Interfaces;
-using PokemonAPI.BusinessLogic.Enums;
 using PokemonAPI.Controllers.Interfaces;
-using PokemonAPI.Logging;
+using PokemonAPIBusinessLayer.GetPokemonInformationLogic;
+using PokemonAPIBusinessLayer.Logging;
+using PokemonAPIBusinessLayer.Models;
+using PokemonAPIBusinessLayer.SpeciesParser;
 
 namespace PokemonAPI.Controllers.Implementations;
 
@@ -18,14 +19,14 @@ public class PokemonInformationController : ControllerBase, IBasicPokemonInforma
 {
     private readonly ILoggerUtility? _loggerUtility;
     private readonly HttpClient _httpClient;
-    private readonly IPokemonSpeciesParser _speciesParser;
+    private readonly IGetPokemonInformationLogic _getPokemonInformationLogic;
 
     public PokemonInformationController(ILoggerUtility? loggerUtility, IHttpClientFactory httpClientFactory,
-        IPokemonSpeciesParser pokemonSpeciesParser)
+        IGetPokemonInformationLogic getPokemonInformationLogic)
     {
         _loggerUtility = loggerUtility;
         _httpClient = httpClientFactory.CreateClient();
-        _speciesParser = pokemonSpeciesParser;
+        _getPokemonInformationLogic = getPokemonInformationLogic;
 
         loggerUtility?.CreateLog(Directory.GetCurrentDirectory());
     }
@@ -40,24 +41,17 @@ public class PokemonInformationController : ControllerBase, IBasicPokemonInforma
     public async Task<IActionResult> GetPokemonBasicInformation(string pokemonName)
     {
         _loggerUtility?.Logger.Information($"Get pokemon basic information request received for Pokemon with name {pokemonName}");
-        _speciesParser.BuildingSource = BuildingSource.ExternalAPI;
-        _speciesParser.SpeciesName = pokemonName;
-        try
+        PokemonSpeciesModel? model = _getPokemonInformationLogic.TryGetPokemonBasicInformationFromCache(pokemonName);
+        if (model != null)
         {
-            if (await RetrieveBasicInfoFromExternalSources())
-            {
-                _loggerUtility?.Logger.Information($"Pokemon basic information successfully retrieved from external sources for pokemon named: {pokemonName}");
-                return Ok(_speciesParser.Model);
-            }
-            _loggerUtility?.Logger.Error($"It wasn't possible to retrieve basic information from external sources for pokemon named: {pokemonName}");
-            return BadRequest();
+            return Ok(model);
         }
-        catch (Exception exception)
+        model = await _getPokemonInformationLogic.TryGetPokemonBasicInformationFromExternalSources(pokemonName, _httpClient);
+        if (model != null)
         {
-            _loggerUtility?.Logger.Fatal($"A fatal error happened when trying to retrieve basic information " +
-                $"from external sources for pokemon named: {pokemonName}. Exception: {exception}");
-            return BadRequest(exception);
+            return Ok(model);
         }
+        return BadRequest();
     }
 
     /// <summary>
@@ -70,68 +64,16 @@ public class PokemonInformationController : ControllerBase, IBasicPokemonInforma
     public async Task<IActionResult> GetPokemonBasicInformationWithTranslation(string pokemonName)
     {
         _loggerUtility?.Logger.Information($"GET pokemon basic information with translation received for Pokemon with name {pokemonName}");
-        _speciesParser.BuildingSource = BuildingSource.ExternalAPI;
-        _speciesParser.SpeciesName = pokemonName;
-        try
+        PokemonSpeciesModel? model = _getPokemonInformationLogic.TryGetPokemonInformationTranslatedFromCache(pokemonName);
+        if (model != null)
         {
-            if (await RetrieveBasicInfoWithTranslationFromExternalSources())
-            {
-                _loggerUtility?.Logger.Information($"Pokemon basic information with translation successfully retrieved from external sources for pokemon named: {pokemonName}");
-                return Ok(_speciesParser.Model);
-            }
-            _loggerUtility?.Logger.Error($"It wasn't possible to retrieve basic information with translation from external sources for pokemon named: {pokemonName}");
-            return BadRequest();
+            return Ok(model);
         }
-        catch (Exception exception)
+        model = await _getPokemonInformationLogic.TryGetPokemonInformationTranslatedFromExternalSources(pokemonName, _httpClient);
+        if (model != null)
         {
-            _loggerUtility?.Logger.Fatal($"A fatal error happened when trying to retrieve basic information with translation" +
-                $"from external sources for pokemon named: {pokemonName}. Exception: {exception}");
-            return BadRequest(exception);
+            return Ok(model);
         }
-    }
-    
-    /// <summary>
-    /// Retrieves a PokemonSpeciesModel with its basic information from external sources.
-    /// </summary>
-    /// <returns>True if the PokemonSpeciesModel was successfully retrieved, False otherwise</returns>
-    private async Task<bool> RetrieveBasicInfoFromExternalSources()
-    {
-        _loggerUtility?.Logger.Information($"Making request for basic pokemon information from external sources for pokemon named: {_speciesParser.Model}");
-        HttpResponseMessage response = await _httpClient.GetAsync($"https://pokeapi.co/api/v2/pokemon-species/{_speciesParser.SpeciesName}");
-        if (response.IsSuccessStatusCode)
-        {
-            return _speciesParser.ParseBasicInformationFromStream(response.Content.ReadAsStream());
-        }
-        return false;
-    }
-
-    /// <summary>
-    /// Retrieves a PokemonSpeciesModel with its basic information and translation if possible from external sources.
-    /// </summary>
-    /// <returns>True if the PokemonSpeciesModel was successfully retrieved, False otherwise</returns>
-    private async Task<bool> RetrieveBasicInfoWithTranslationFromExternalSources()
-    {
-        _loggerUtility?.Logger.Information($"Making request for basic pokemon information for translation from external sources for pokemon named: {_speciesParser.Model}");
-        if (!await RetrieveBasicInfoFromExternalSources())
-        {
-            return false;
-        }
-        string endpoint;
-        var payload = new {text = _speciesParser.Model.Description};
-        if (_speciesParser.Model.Habitat == "cave" || (_speciesParser.Model.IsLegendary ?? false))
-        {
-            endpoint = "https://api.funtranslations.com/translate/yoda.json";
-        }
-        else
-        {
-            endpoint = "https://api.funtranslations.com/translate/shakespeare.json";
-        }
-        _loggerUtility?.Logger.Information($"Making request for description translation from external sources for pokemon named: {_speciesParser.Model}");
-        HttpResponseMessage response = await _httpClient.PostAsJsonAsync(endpoint, payload);
-        if (response.IsSuccessStatusCode)
-        {
-            return _speciesParser.ParseTranslationFromStream(response.Content.ReadAsStream());
-        }
-        return false;
+        return BadRequest();
     }
 }

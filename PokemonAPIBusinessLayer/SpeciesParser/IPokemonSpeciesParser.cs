@@ -1,14 +1,12 @@
-using PokemonAPI.BusinessLogic.Enums;
-using PokemonAPI.Models;
+using PokemonAPIBusinessLayer.Models;
 
-namespace PokemonAPI.BusinessLogic.Interfaces;
+namespace PokemonAPIBusinessLayer.SpeciesParser;
 
 /// <summary>
 /// Interface for Custom parser for PokemonSpeciesModel class
 /// </summary>
 public interface IPokemonSpeciesParser
 {
-    public BuildingSource? BuildingSource { get; set; }
     public PokemonSpeciesModel Model { get; set; }
     public string? SpeciesName { get; set; }
     /// <summary>
