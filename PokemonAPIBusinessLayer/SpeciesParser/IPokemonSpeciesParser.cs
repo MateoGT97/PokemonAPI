@@ -1,13 +1,13 @@
-using PokemonAPIBusinessLayer.Models;
+using PokemonAPIEF.Models;
 
 namespace PokemonAPIBusinessLayer.SpeciesParser;
 
 /// <summary>
-/// Interface for Custom parser for PokemonSpeciesModel class
+/// Interface for Custom parser for PokemonSpeciesModel class from external APIs.
 /// </summary>
 public interface IPokemonSpeciesParser
 {
-    public PokemonSpeciesModel Model { get; set; }
+    public CachedPokemonSpecies Model { get; set; }
     public string? SpeciesName { get; set; }
     /// <summary>
     /// Parses basic information of a Pokemon from a stream

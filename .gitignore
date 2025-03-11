@@ -403,4 +403,6 @@ appsettings.Development.json
 
 LogsUTC/
 *.db
+*.db-shm
+*.db-wal
 .config

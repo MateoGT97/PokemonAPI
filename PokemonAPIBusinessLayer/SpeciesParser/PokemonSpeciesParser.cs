@@ -1,5 +1,6 @@
 using PokemonAPIBusinessLayer.Helpers;
 using PokemonAPIBusinessLayer.Models;
+using PokemonAPIEF.Models;
 using System.Text.Json.Nodes;
 
 namespace PokemonAPIBusinessLayer.SpeciesParser;
@@ -9,7 +10,7 @@ namespace PokemonAPIBusinessLayer.SpeciesParser;
 /// </summary>
 public class PokemonSpeciesParser : IPokemonSpeciesParser
 {
-    public PokemonSpeciesModel Model { get; set; } = new PokemonSpeciesModel();
+    public CachedPokemonSpecies Model { get; set; } = new CachedPokemonSpecies();
     public string? SpeciesName { get; set; }
 
     /// <summary>
@@ -77,9 +78,9 @@ public class PokemonSpeciesParser : IPokemonSpeciesParser
             .ToString().SanitizeStringFromSpecialCharacters() ?? "Habitat not found";
         bool? isLegendary = rootJsonNode["is_legendary"]?.GetValue<bool>();
 
-        Model.Name = SpeciesName;
+        Model.SpeciesName = SpeciesName!;
         Model.IsLegendary = isLegendary;
-        Model.Habitat = habitatName;
+        Model.HabitatName = habitatName;
         Model.Description = description;
         return true;
     }
@@ -98,7 +99,7 @@ public class PokemonSpeciesParser : IPokemonSpeciesParser
         string? translation = rootTranslationNode["contents"]?["translated"]?
             .ToString().SanitizeStringFromSpecialCharacters() ?? Model.Description;
 
-        Model.Description = translation;
+        Model.TranslatedDescription = translation;
         return true;
     }
 }

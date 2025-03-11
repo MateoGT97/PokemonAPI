@@ -7,6 +7,9 @@ using PokemonAPIEF.Models;
 
 namespace PokemonAPIBusinessLayer.GetPokemonInformationLogic;
 
+/// <summary>
+/// Class that handles the logic to retrieve pokemon information from the cache db or external APIs.
+/// </summary>
 public class GetPokemonInformationLogic : IGetPokemonInformationLogic
 {
     public IPokemonCacheRepository PokemonCacheRepository { get; set; } = null!;
@@ -22,6 +25,11 @@ public class GetPokemonInformationLogic : IGetPokemonInformationLogic
         LoggerUtility?.CreateLog(Directory.GetCurrentDirectory());
     }
     
+    /// <summary>
+    /// Tries to get the basic information of a pokemon from the cache db.
+    /// </summary>
+    /// <param name="pokemonName">Name of the pokemon species to retrieve</param>
+    /// <returns>PokemonSpecies model retrieved, null if it was not possible to retrieve</returns>
     public PokemonSpeciesModel? TryGetPokemonBasicInformationFromCache(string pokemonName)
     {
         CachedPokemonSpecies? cachedModel = PokemonCacheRepository.GetCachedPokemonSpeciesByName(pokemonName);
@@ -38,6 +46,12 @@ public class GetPokemonInformationLogic : IGetPokemonInformationLogic
         return null;
     }
 
+    /// <summary>
+    /// Tries to get the basic information of a pokemon from the external api.
+    /// </summary>
+    /// <param name="pokemonName">Name of the pokemon species to retrieve</param>
+    /// <param name="httpClient">httpClient to use for the retrieval</param>
+    /// <returns>PokemonSpecies model retrieved, null if it was not possible to retrieve</returns>
     public async Task<PokemonSpeciesModel?> TryGetPokemonBasicInformationFromExternalSources(string pokemonName, HttpClient httpClient)
     {
         SpeciesParser.SpeciesName = pokemonName;
@@ -46,15 +60,14 @@ public class GetPokemonInformationLogic : IGetPokemonInformationLogic
             if (await RetrieveBasicInfoFromExternalSources(httpClient))
             {
                 LoggerUtility?.Logger.Information($"Pokemon basic information successfully retrieved from external sources for pokemon named: {pokemonName}");
-                PokemonCacheRepository.AddOrUpdateCachedPokemonSpecies(new CachedPokemonSpecies()
-                {
-                    SpeciesName = pokemonName,
-                    HabitatName = SpeciesParser.Model.Habitat,
+                SpeciesParser.Model.LastCached = DateTime.Now;
+                PokemonCacheRepository.AddOrUpdateCachedPokemonSpecies(SpeciesParser.Model);
+                return new(){
+                    Name = SpeciesParser.Model.SpeciesName,
+                    Habitat = SpeciesParser.Model.HabitatName,
                     Description = SpeciesParser.Model.Description,
-                    IsLegendary = SpeciesParser.Model.IsLegendary,
-                    LastCached = DateTime.Now
-                });
-                return SpeciesParser.Model;
+                    IsLegendary = SpeciesParser.Model.IsLegendary
+                };
             }
             LoggerUtility?.Logger.Error($"It wasn't possible to retrieve basic information from external sources for pokemon named: {pokemonName}");
             return null;
@@ -67,6 +80,11 @@ public class GetPokemonInformationLogic : IGetPokemonInformationLogic
         }
     }
 
+    /// <summary>
+    /// Tries to get the translated information of a pokemon from the cache db.
+    /// </summary>
+    /// <param name="pokemonName">Name of the pokemon species to retrieve</param>
+    /// <returns>PokemonSpecies model retrieved, null if it was not possible to retrieve</returns>
     public PokemonSpeciesModel? TryGetPokemonInformationTranslatedFromCache(string pokemonName)
     {
         CachedPokemonSpecies? cachedModel = PokemonCacheRepository.GetCachedPokemonSpeciesByName(pokemonName);
@@ -76,13 +94,19 @@ public class GetPokemonInformationLogic : IGetPokemonInformationLogic
             return new(){
                 Name = cachedModel.SpeciesName,
                 Habitat = cachedModel.HabitatName,
-                Description = cachedModel.TranslatedDescription,
+                Description = cachedModel.TranslatedDescription ?? cachedModel.Description,
                 IsLegendary = cachedModel.IsLegendary
             };
         }
         return null;
     }
 
+    /// <summary>
+    /// Tries to get the translated information of a pokemon from the external api.
+    /// </summary>
+    /// <param name="pokemonName">Name of the pokemon species to retrieve</param>
+    /// <param name="httpClient">httpClient to use for the retrieval</param>
+    /// <returns>PokemonSpecies model retrieved, null if it was not possible to retrieve</returns>
     public async Task<PokemonSpeciesModel?> TryGetPokemonInformationTranslatedFromExternalSources(string pokemonName, HttpClient httpClient)
     {
         SpeciesParser.SpeciesName = pokemonName;
@@ -91,15 +115,14 @@ public class GetPokemonInformationLogic : IGetPokemonInformationLogic
             if (await RetrieveBasicInfoWithTranslationFromExternalSources(httpClient))
             {
                 LoggerUtility?.Logger.Information($"Pokemon basic information with translation successfully retrieved from external sources for pokemon named: {pokemonName}");
-                PokemonCacheRepository.AddOrUpdateCachedPokemonSpecies(new CachedPokemonSpecies()
-                {
-                    SpeciesName = pokemonName,
-                    HabitatName = SpeciesParser.Model.Habitat,
-                    TranslatedDescription = SpeciesParser.Model.Description,
-                    IsLegendary = SpeciesParser.Model.IsLegendary,
-                    LastCached = DateTime.Now
-                });
-                return SpeciesParser.Model;
+                SpeciesParser.Model.LastCached = DateTime.Now;
+                PokemonCacheRepository.AddOrUpdateCachedPokemonSpecies(SpeciesParser.Model);
+                return new(){
+                    Name = SpeciesParser.Model.SpeciesName,
+                    Habitat = SpeciesParser.Model.HabitatName,
+                    Description = SpeciesParser.Model.TranslatedDescription ?? SpeciesParser.Model.Description,
+                    IsLegendary = SpeciesParser.Model.IsLegendary
+                };
             }
             LoggerUtility?.Logger.Error($"It wasn't possible to retrieve basic information with translation from external sources for pokemon named: {pokemonName}");
             return null;
@@ -140,7 +163,7 @@ public class GetPokemonInformationLogic : IGetPokemonInformationLogic
         }
         string endpoint;
         var payload = new {text = SpeciesParser.Model.Description};
-        if (SpeciesParser.Model.Habitat == "cave" || (SpeciesParser.Model.IsLegendary ?? false))
+        if (SpeciesParser.Model.HabitatName == "cave" || (SpeciesParser.Model.IsLegendary ?? false))
         {
             endpoint = "https://api.funtranslations.com/translate/yoda.json";
         }
@@ -154,6 +177,6 @@ public class GetPokemonInformationLogic : IGetPokemonInformationLogic
         {
             return SpeciesParser.ParseTranslationFromStream(response.Content.ReadAsStream());
         }
-        return false;
+        return true;
     }
 }

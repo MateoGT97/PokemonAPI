@@ -1,6 +1,7 @@
 using System.Text;
 using PokemonAPIBusinessLayer.Models;
 using PokemonAPIBusinessLayer.SpeciesParser;
+using PokemonAPIEF.Models;
 
 namespace PokemonAPITests;
 
@@ -26,17 +27,17 @@ public class PokemonSpeciesParserTests
         Assert.False(resultFakeStream);
         Assert.True(resultRealStream);
 
-        Assert.IsAssignableFrom<PokemonSpeciesModel>(fakeInfoSpeciesParser.Model);
-        Assert.IsAssignableFrom<PokemonSpeciesModel>(realInfoSpeciesParser.Model);
+        Assert.IsAssignableFrom<CachedPokemonSpecies>(fakeInfoSpeciesParser.Model);
+        Assert.IsAssignableFrom<CachedPokemonSpecies>(realInfoSpeciesParser.Model);
 
-        Assert.NotNull(realInfoSpeciesParser.Model?.Name);
+        Assert.NotNull(realInfoSpeciesParser.Model?.SpeciesName);
         Assert.NotNull(realInfoSpeciesParser.Model?.Description);
-        Assert.NotNull(realInfoSpeciesParser.Model?.Habitat);
+        Assert.NotNull(realInfoSpeciesParser.Model?.HabitatName);
         Assert.NotNull(realInfoSpeciesParser.Model?.IsLegendary);
 
-        Assert.Null(fakeInfoSpeciesParser.Model?.Name);
+        Assert.Null(fakeInfoSpeciesParser.Model?.SpeciesName);
         Assert.Null(fakeInfoSpeciesParser.Model?.Description);
-        Assert.Null(fakeInfoSpeciesParser.Model?.Habitat);
+        Assert.Null(fakeInfoSpeciesParser.Model?.HabitatName);
         Assert.Null(fakeInfoSpeciesParser.Model?.IsLegendary);
     }
 
@@ -47,11 +48,11 @@ public class PokemonSpeciesParserTests
         // Arrange
         var realTranslationStream = File.OpenRead($"{_theoryFilesInfo}/{translatedRealInformationJsonPath}");
         var realInfoSpeciesParser = new PokemonSpeciesParser();
-        realInfoSpeciesParser.Model.Description = "A Description";
+        realInfoSpeciesParser.Model.TranslatedDescription = "A Description";
 
         var fakeInfoStream = new MemoryStream(Encoding.UTF8.GetBytes("Oops!"));
         var fakeInfoSpeciesParser = new PokemonSpeciesParser();
-        fakeInfoSpeciesParser.Model.Description = "A Description";
+        fakeInfoSpeciesParser.Model.TranslatedDescription = "A Description";
 
         // Act
         var resultRealStream = realInfoSpeciesParser.ParseTranslationFromStream(realTranslationStream);
@@ -61,9 +62,9 @@ public class PokemonSpeciesParserTests
         Assert.False(resultFakeStream);
         Assert.True(resultRealStream);
 
-        Assert.IsAssignableFrom<PokemonSpeciesModel>(fakeInfoSpeciesParser.Model);
-        Assert.IsAssignableFrom<PokemonSpeciesModel>(realInfoSpeciesParser.Model);
+        Assert.IsAssignableFrom<CachedPokemonSpecies>(fakeInfoSpeciesParser.Model);
+        Assert.IsAssignableFrom<CachedPokemonSpecies>(realInfoSpeciesParser.Model);
 
-        Assert.NotEqual(realInfoSpeciesParser.Model.Description, fakeInfoSpeciesParser.Model.Description);
+        Assert.NotEqual(realInfoSpeciesParser.Model.TranslatedDescription, fakeInfoSpeciesParser.Model.TranslatedDescription);
     }
 }
