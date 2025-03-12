@@ -17,4 +17,15 @@
     <ProjectReference Include="..\PokemonAPIBusinessLayer\PokemonAPIBusinessLayer.csproj" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <Content Include="../PokemonAPIEF/bin/Debug/net8.0/PokemonAPIEF.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <Content Include="../PokemonAPIEF/bin/Release/net8.0/PokemonAPIEF.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

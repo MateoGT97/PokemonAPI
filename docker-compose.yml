@@ -1,0 +1,11 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP.NET Core service.
+
+services:
+  pokemonapi:
+    image: pokemon-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 5252:5252
+      - 7106:7106
