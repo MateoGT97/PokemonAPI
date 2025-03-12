@@ -15,12 +15,13 @@ which retrieves information about the pokemon Habitat Name, legendary status and
 ## How to run the API (assuming you want to debug):
 1. Clone the repository.
 2. Download the dotnet 8.0, you can get it from the following site https://dotnet.microsoft.com/en-us/download/dotnet/8.0.
-3. Assuming you want to debug the API, make a copy of the appsettings.json file you can find in each folder found on the root path, rename the copy to appsettings.Development.json.
+3. Assuming you want to debug the API, make a copy of the appsettings.json rename the copy to appsettings.Development.json.
 4. Install the ef tools by running `dotnet tool install --global dotnet-ef` if you want to install them locally instead run `dotnet tool install --local --create-manifest-if-needed dotnet-ef`.
-5. Create db by applying migrations: 
-    1. On a terminal navigate to the ./PokemonAPIEF
-    2. Run `dotnet ef database update`.
+5. Create db by applying migrations: Run `dotnet ef database update --project PokemonAPIEF/PokemonAPIEF.csproj`.
 6. Run the API, you can run it by going to the root folder and executing `dotnet run --project PokemonAPI/PokemonAPI.csproj`
+
+## How to run the API with Docker
+Either run the docker-compose files included on the repo or build the image with `docker build -t <ImageName> -f <Dockerfile or Dockerfile.Development> .` and then run it with `docker run -p 5252:5252 --name <ImageName> pokemon-api`
 
 ## Things to consider for a production scenario.
 1. A largue test battery with more fine granulated tests can be implemented.

@@ -31,21 +31,26 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="appsettings.json">
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <Content Include="../appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup> 
 
-  <ItemGroup>
-    <Content Include="appsettings.development.json">
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <Content Include="../appsettings.Development.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup> 
+  </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="../PokemonAPIEF.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <Content Include="../PokemonAPIEF/bin/Debug/net8.0/PokemonAPIEF.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <Content Include="../PokemonAPIEF/bin/Release/net8.0/PokemonAPIEF.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 

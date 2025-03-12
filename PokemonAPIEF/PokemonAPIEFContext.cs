@@ -19,13 +19,13 @@ public class PokemonAPIEFContext : DbContext, IPokemonAPIEFContext
 
     public PokemonAPIEFContext(string connectionString = "PokemonAPIEFContext")
     {
-        string appSettingsRelativePath = "./appsettings.json";
+        string appSettingsRelativePath = "appsettings.json";
         # if DEBUG
-        appSettingsRelativePath = "./appsettings.Development.json";
+        appSettingsRelativePath = "appsettings.Development.json";
         #endif
         IConfiguration configuration = new ConfigurationBuilder().AddJsonFile(appSettingsRelativePath,false).Build();
 
-        Connection = new SqliteConnection(configuration.GetConnectionString(connectionString));
+        Connection = new SqliteConnection($"Data Source = {AppDomain.CurrentDomain.BaseDirectory}{configuration.GetConnectionString(connectionString)}");
     }
 
     /// <summary>

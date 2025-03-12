@@ -1,0 +1,17 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP.NET Core service.
+
+services:
+  pokemonapi:
+    image: pokemon-api-development
+    build:
+      context: .
+      dockerfile: Dockerfile.Development
+      args:
+        - configuration=Debug
+    ports:
+      - 5252:5252
+      - 7106:7106
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ~/.vsdbg:c:\remote_debugger:rw
